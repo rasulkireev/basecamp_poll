@@ -141,6 +141,17 @@ requests = "*"
 requests-oauthlib = ">=0.3.0"
 
 [[package]]
+category = "dev"
+description = "An SSL-enabled development server for Django"
+name = "django-sslserver"
+optional = false
+python-versions = "*"
+version = "0.22"
+
+[package.dependencies]
+Django = ">=1.8"
+
+[[package]]
 category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
@@ -332,7 +343,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "3e4b2f81acc7eba84c4d462b92f502f0722b25ed8819c7e327266af9f9b90088"
+content-hash = "7aea32fa47cc13d9a343b838a3483a85cb03c176ba0ab1c67e3fc2705b759ce0"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -382,6 +393,9 @@ django = [
 ]
 django-allauth = [
     {file = "django-allauth-0.42.0.tar.gz", hash = "sha256:f17209410b7f87da0a84639fd79d3771b596a6d3fc1a8e48ce50dabc7f441d30"},
+]
+django-sslserver = [
+    {file = "django_sslserver-0.22-py3-none-any.whl", hash = "sha256:c598a363d2ccdc2421c08ddb3d8b0973f80e8e47a3a5b74e4a2896f21c2947c5"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
