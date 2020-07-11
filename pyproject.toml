@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "basecamp_poll"
+version = "0.1.0"
+description = "Add Polling ability to Basecamp"
+authors = ["Rasul Kireev <me@rasulkireev.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+django = "^3.0.8"
+django-allauth = "^0.42.0"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.5.3"
+black = "^19.10b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
