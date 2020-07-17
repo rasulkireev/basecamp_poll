@@ -1,9 +1,37 @@
+{% extends 'base.html' %}
 {% load socialaccount %}
 
-<h1>Django Allauth Tutorial</h1>
+{% block title %}Home{% endblock %}
+
+{% block content %}
 {% if user.is_authenticated %}
-<p>Welcome {{ user.username }} !!!</p>
-<p><a href="{% url 'account_logout' %}">logout</a></p>
+  <p>Hi {{ user.username }}!</p>
+  
+  {% if user.subscription == None %}
+    <a href="{% url 'users:upgrade' %}">Upgrade</a>
+  {% else %}
+    <p>Current Plan - {{ user.subscription }}</p>
+  {% endif %}
+  
+  <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
-<a href="{% provider_login_url 'basecamp' %}">Sign Up</a>
+  <p>You are not logged in</p>
+  <a href="{% provider_login_url 'basecamp' %}">Sign Up</a> |
+  <a href="{% provider_login_url 'basecamp' %}">Login</a>
+
+  <div>
+    {% for product in products %}
+      <div>
+        <p>{{ product.name }}</p>
+        {% for plan in product.plan_set.all %}
+          <div>
+            <p>{{ plan.nickname }}</p>
+            <p>{{ plan.human_readable_price }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+
 {% endif %}
+{% endblock %}
