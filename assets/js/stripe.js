@@ -1,30 +1,32 @@
-
-// Set your publishable key: remember to change this to your live publishable key in production
-// See your keys here: https://dashboard.stripe.com/account/apikeys
-
 var stripe = Stripe(stripePublicKey);
 var elements = stripe.elements();
 
 var style = {
-    base: {
-      color: "#32325d",
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      fontSmoothing: "antialiased",
-      fontSize: "16px",
-      "::placeholder": {
-        color: "#aab7c4"
-      }
-    },
-    invalid: {
-      color: "#fa755a",
-      iconColor: "#fa755a"
+  base: {
+    color: "#32325d",
+    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+    fontSmoothing: "antialiased",
+    fontSize: "16px",
+    "::placeholder": {
+      color: "#aab7c4"
     }
-  };
-  
-  var cardElement = elements.create("card", { style: style });
-  cardElement.mount("#card-element");
+  },
+  invalid: {
+    color: "#fa755a",
+    iconColor: "#fa755a"
+  }
+};
 
-  cardElement.on('change', showCardError);
+var cardElement = elements.create("card", { style: style });
+cardElement.mount("#card-element");
+
+cardElement.on('change', showCardError);
+
+var form = document.getElementById('subscription-form');
+form.addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  stripePaymentMethod(cardElement);
+});
 
 function showCardError(event) {
   let displayError = document.getElementById('card-errors');
@@ -32,105 +34,69 @@ function showCardError(event) {
     displayError.textContent = event.error.message;
   } else {
     displayError.textContent = '';
-  }π
-}
-
-function onSubscriptionComplete(result) {
-  // Payment was successful.
-  if (result.subscription.status === 'active') {
-    // Change your UI to show a success message to your customer.
-    // Call your backend to grant access to your service based on
-    // `result.subscription.items.data[0].price.product` the customer subscribed to.
   }
 }
 
-function createCustomer() {
-  return fetch(createCustomerUrl, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email: email
-    })
-  })
-    .then(response => {
-      return response.json();
-    })
-    .then(result => {
-      // result.customer.id is used to map back to the customer object
-      // result.setupIntent.client_secret is used to create the payment method
-      return result;
-    });
-}
-
-
-function createPaymentMethod(cardElement, customerId, priceId) {
-  return stripe
+function stripePaymentMethod(card) {
+  let billingName = "{{ user.username }}";
+  stripe
     .createPaymentMethod({
       type: 'card',
-      card: cardElement,
+      card: card,
+      billing_details: {
+        name: billingName,
+      },
     })
     .then((result) => {
       if (result.error) {
-        displayError(error);
+        showCardError(result);
       } else {
-        createSubscription({
-          customerId: customerId,
-          paymentMethodId: result.paymentMethod.id,
-          priceId: priceId,
-        });
+          console.log("Handling Payment")
+          stripePaymentMethodHandler(result);
       }
     });
 }
 
-function createSubscription({ customerId, paymentMethodId, priceId }) {
-  return (
-    fetch(createSubscriptionUrl, {
+function stripePaymentMethodHandler(result) {
+  if (result.error) {
+    // Error code
+    console.log("Handling Payment Error")
+  } else {
+    const paymentParams = {
+        email: customerEmail,
+        plan_id: "price_1H4864HQF19ZH0rLjubDnaZS",
+        payment_method: result.paymentMethod.id,
+    };
+    console.log("Passing Parameters")
+    fetch(createCustomerUrl, {
       method: 'post',
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
       },
-      body: JSON.stringify({
-        customerId: customerId,
-        paymentMethodId: paymentMethodId,
-        priceId: priceId,
-      }),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      // If the card is declined, display an error to the user.
-      .then((result) => {
-        if (result.error) {
-          // The card had an error when trying to attach it to a customer.
-          throw result;
-        }
-        return result;
-      })
-      // Normalize the result to contain the object returned by Stripe.
-      // Add the addional details we need.
-      .then((result) => {
-        return {
-          paymentMethodId: paymentMethodId,
-          priceId: priceId,
-          subscription: result,
-        };
-      })
-      // Some payment methods require a customer to be on session
-      // to complete the payment process. Check the status of the
-      // payment intent to handle these actions.
-      .then(handlePaymentThatRequiresCustomerAction)
-      // If attaching this card to a Customer object succeeds,
-      // but attempts to charge the customer fail, you
-      // get a requires_payment_method error.
-      .then(handleRequiresPaymentMethod)
-      // No more actions required. Provision your service for the user.
-      .then(onSubscriptionComplete)
-      .catch((error) => {
-        // An error has happened. Display the failure to the user here.
-        // We utilize the HTML element we created.
-        showCardError(error);
-      })
-  );
+      credentials: 'same-origin',
+      body: JSON.stringify(paymentParams),
+    }).then(function(response) {
+      return response.json(); 
+    }).then(function(result) {
+      // todo: check and process subscription status based on the response
+    }).catch(function (error) {
+      // more error handling
+    });
+  }
+};
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
 }

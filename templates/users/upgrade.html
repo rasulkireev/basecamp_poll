@@ -11,6 +11,20 @@
 {% block content %}
 <h2 class="text-3xl mb-5">Upgrade</h2>
 
+<h3>Select the Plan:</h3>
+{% for product in products %}
+  <div class="p-3 m-3">
+    <p>{{ product.name }}</p>
+    {% for plan in product.plan_set.all %}
+      <div>
+        <p>{{ plan.nickname }}</p>
+        <p>{{ plan.human_readable_price }}</p>
+        <p>{{ plan.id }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
+
 <div class="w-2/5">
   <form id="subscription-form">
     <div id="card-element" class="MyCardElement">
@@ -29,94 +43,11 @@
 {% block pre_close_body %}
 
 <script>
-  const stripePublicKey = "pk_live_51H47wOHQF19ZH0rLYk2DZvNEBrhfHPBZBz9G7n0yjwlXZIixdoq5NyBM8lmNXxVefcNdOXrN0E5i4qBU0gB9zvM600KVY8Kyik";
-  const customerEmail = "kireevr1996@gmail.com";
-  const createCustomerUrl = "/users/create_subscription/";
-
-  var stripe = Stripe(stripePublicKey);
-  var elements = stripe.elements();
-
-  var style = {
-    base: {
-      color: "#32325d",
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      fontSmoothing: "antialiased",
-      fontSize: "16px",
-      "::placeholder": {
-        color: "#aab7c4"
-      }
-    },
-    invalid: {
-      color: "#fa755a",
-      iconColor: "#fa755a"
-    }
-  };
-
-  var cardElement = elements.create("card", { style: style });
-  cardElement.mount("#card-element");
-
-  cardElement.on('change', showCardError);
-
-  var form = document.getElementById('subscription-form');
-  form.addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    stripePaymentMethod(cardElement);
-  });
-
-  function showCardError(event) {
-    let displayError = document.getElementById('card-errors');
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  }
-  
-  function stripePaymentMethod(card) {
-    let billingName = "{{ user.username }}";
-    stripe
-      .createPaymentMethod({
-        type: 'card',
-        card: card,
-        billing_details: {
-          name: billingName,
-        },
-      })
-      .then((result) => {
-        if (result.error) {
-          showCardError(result);
-        } else {
-            stripePaymentMethodHandler(result);
-        }
-      });
-  }
-
-  function stripePaymentMethodHandler(result) {
-    if (result.error) {
-      // Error code
-    } else {
-      const paymentParams = {
-          email: customerEmail,
-          plan_id: "price_1H48VmHQF19ZH0rLpsWzXJ7G",
-          payment_method: result.paymentMethod.id,
-      };
-      fetch(createCustomerUrl, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': getCookie('csrftoken'),
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify(paymentParams),
-      }).then(function(response) {
-        return response.json(); 
-      }).then(function(result) {
-        // todo: check and process subscription status based on the response
-      }).catch(function (error) {
-        // more error handling
-      });
-    }
-  };
+  const stripePublicKey = "{{ STRIPE_PUBLIC_KEY }}";
+  const customerEmail = "{{ user.username }}";
+  const createCustomerUrl = "{% url 'users:create_customer_and_subscription' %}";
 </script>
+
+<script src="{% static 'js/stripe.js' %}"></script>
 
 {% endblock %}

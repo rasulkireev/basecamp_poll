@@ -28,7 +28,7 @@ class UpgradeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
+        context['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
         context['products'] = Product.objects.all()
 
         return context
@@ -47,12 +47,12 @@ def create_customer_and_subscription(request):
         'plan_id': 'plan_GqvXkzAvxlF0wR',
     }
     """
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+    stripe.api_key = djstripe.settings.STRIPE_PUBLIC_KEY
 
     # parse request, extract details, and verify assumptions
     request_body = json.loads(request.body.decode('utf-8'))
     
-    email = request_body['customerEmail']
+    email = request_body['email']
     assert request.user.email == email  
     
     payment_method = request_body['payment_method']

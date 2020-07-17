@@ -14,7 +14,7 @@
       <a class="rounded p-5 text-xl border-yellow-400 bg-blue-400 text-white hover:bg-blue-700 hover:text-yellow-400" href="{% url 'users:upgrade' %}">Upgrade</a>
     </div>  
   {% else %}
-    <p>Current Plan - {{ user.subscription }}</p>
+    <p class="p-5 rounded mb-10">Current Plan - {{ user.subscription }}</p>
   {% endif %}
   
   <div class="mb-10">
