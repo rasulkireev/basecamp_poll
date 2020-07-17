@@ -34,8 +34,6 @@ class UpgradeView(TemplateView):
         return context
 
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
 @login_required
 @require_POST
 @transaction.atomic
@@ -54,12 +52,11 @@ def create_customer_and_subscription(request):
     # parse request, extract details, and verify assumptions
     request_body = json.loads(request.body.decode('utf-8'))
     
-    email = request_body['customer_email']
+    email = request_body['customerEmail']
     assert request.user.email == email  
     
     payment_method = request_body['payment_method']
     plan_id = request_body['plan_id']
-    price_id = request_body['price_id']
 
     # first sync payment method to local DB to workaround 
     # https://github.com/dj-stripe/dj-stripe/issues/1125
@@ -75,8 +72,6 @@ def create_customer_and_subscription(request):
         'default_payment_method': payment_method,
       },
     )
-    print("This is the created customer")
-    print(customer)
 
     djstripe_customer = djstripe.models.Customer.sync_from_stripe_data(customer)
 
@@ -86,18 +81,11 @@ def create_customer_and_subscription(request):
       items=[
         {
           'plan': plan_id,
-          'price': plan_id,
         },
       ],
       expand=['latest_invoice.payment_intent'],
     )
-    print("This is the created subsription")
-    print(subscription)
-
     djstripe_subscription = djstripe.models.Subscription.sync_from_stripe_data(subscription)
-
-    print(djstripe_customer)
-    print(djstripe_subscription)
 
     # associate customer and subscription with the user
     request.user.customer = djstripe_customer

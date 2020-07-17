@@ -163,6 +163,17 @@ version = "0.4.5"
 
 [[package]]
 category = "dev"
+description = "Extensions for Django"
+name = "django-extensions"
+optional = false
+python-versions = ">=3.5"
+version = "3.0.3"
+
+[package.dependencies]
+six = ">=1.2"
+
+[[package]]
+category = "dev"
 description = "An SSL-enabled development server for Django"
 name = "django-sslserver"
 optional = false
@@ -399,7 +410,7 @@ python-versions = "*"
 version = "1.12.1"
 
 [metadata]
-content-hash = "26068d961ccab4c076060268df2445eb4c9ba3644722561183e0a58690a2a115"
+content-hash = "22ec14d5a97dd0f65a02561607d9f4b942826e4b2a1d6a9cef7ba7a8695741ee"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -457,6 +468,10 @@ django-allauth = [
 django-environ = [
     {file = "django-environ-0.4.5.tar.gz", hash = "sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde"},
     {file = "django_environ-0.4.5-py2.py3-none-any.whl", hash = "sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4"},
+]
+django-extensions = [
+    {file = "django-extensions-3.0.3.tar.gz", hash = "sha256:6230898b1e1d5deb3ddab8335b2d270edb7afa4ef916a95e479a19fdfb0464cb"},
+    {file = "django_extensions-3.0.3-py2.py3-none-any.whl", hash = "sha256:d5fcf8f3bab019487e07473c24453bccd5acfb4440f3ef36788294c307b09d4c"},
 ]
 django-sslserver = [
     {file = "django_sslserver-0.22-py3-none-any.whl", hash = "sha256:c598a363d2ccdc2421c08ddb3d8b0973f80e8e47a3a5b74e4a2896f21c2947c5"},

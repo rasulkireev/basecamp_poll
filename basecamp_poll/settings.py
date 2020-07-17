@@ -52,14 +52,12 @@ INSTALLED_APPS = [
     
     "djstripe",
     "sslserver",
+    'django_extensions',
     
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.basecamp',
-
-    
-    
+    'allauth.socialaccount.providers.basecamp',    
 ]
 
 MIDDLEWARE = [
@@ -163,14 +161,16 @@ LOGOUT_REDIRECT_URL = 'home'
 
 
 # dj-stripe settings
-STRIPE_LIVE_MODE = env('STRIPE_LIVE_MODE')
+STRIPE_LIVE_MODE = False
+
 STRIPE_LIVE_PUBLIC_KEY = env('STRIPE_LIVE_PUBLIC_KEY')
 STRIPE_LIVE_SECRET_KEY = env('STRIPE_LIVE_SECRET_KEY')
 STRIPE_TEST_PUBLIC_KEY = env('STRIPE_TEST_PUBLIC_KEY')
 STRIPE_TEST_SECRET_KEY = env('STRIPE_TEST_SECRET_KEY')
+
 DJSTRIPE_WEBHOOK_SECRET = env('DJSTRIPE_WEBHOOK_SECRET')
 
-if STRIPE_LIVE_MODE:
+if not STRIPE_LIVE_MODE:
     STRIPE_PUBLIC_KEY = STRIPE_LIVE_PUBLIC_KEY
     STRIPE_SECRET_KEY = STRIPE_LIVE_SECRET_KEY
 else:

@@ -5,21 +5,30 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  <p>Hi {{ user.username }}!</p>
+  <div class="mb-10">
+    <p>Hi {{ user.username }}!</p>
+  </div>
   
   {% if user.subscription == None %}
-    <a href="{% url 'users:upgrade' %}">Upgrade</a>
+    <div class="mb-10">
+      <a class="rounded p-5 text-xl border-yellow-400 bg-blue-400 text-white hover:bg-blue-700 hover:text-yellow-400" href="{% url 'users:upgrade' %}">Upgrade</a>
+    </div>  
   {% else %}
     <p>Current Plan - {{ user.subscription }}</p>
   {% endif %}
   
-  <p><a href="{% url 'logout' %}">logout</a></p>
+  <div class="mb-10">
+    <a class="rounded p-5 text-xl border-yellow-400 bg-yellow-400 text-blue-700 hover:bg-blue-700 hover:text-yellow-400" href="{% url 'logout' %}">logout</a>
+  </div>
+    
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% provider_login_url 'basecamp' %}">Sign Up</a> |
-  <a href="{% provider_login_url 'basecamp' %}">Login</a>
 
-  <div>
+  <div class="p-24 mx-auto border mb-5">
+    <p class="mb-10 text-2xl">You are not logged in</p>
+    <a class="rounded p-5 text-xl border-yellow-400 bg-yellow-400 text-blue-700 hover:bg-blue-700 hover:text-yellow-400" href="{% provider_login_url 'basecamp' %}">Sign Up | Login (with Basecamp)</a>
+  </div>
+
+  <div class="p-24 mx-auto border">
     {% for product in products %}
       <div>
         <p>{{ product.name }}</p>

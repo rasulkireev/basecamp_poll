@@ -4,13 +4,15 @@
   <meta charset="utf-8">
   <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
 
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
   {% block pre_close_head %}
   {% endblock %}
 </head>
-<body>
-  <nav>
+<body class="container mx-auto">
+  <nav class="flex items-center h-24">
     <ul>
-      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a class="text-blue-500 hover:text-blue-700" href="{% url 'home' %}">Home</a></li>
     </ul>
   </nav>
   <main>
