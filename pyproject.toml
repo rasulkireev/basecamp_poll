@@ -12,6 +12,7 @@ stripe = "^2.48.0"
 dj-stripe = "^2.3.0"
 django-environ = "^0.4.5"
 whitenoise = "^5.1.0"
+httpx = "^0.13.3"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.5.3"

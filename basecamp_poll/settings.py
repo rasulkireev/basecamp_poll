@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'users.apps.UsersConfig',
+    'polls.apps.PollsConfig',
     
     "djstripe",
     "sslserver",
@@ -161,10 +162,21 @@ LOGOUT_REDIRECT_URL = 'home'
 
 
 # dj-stripe settings
-STRIPE_LIVE_MODE = env('STRIPE_LIVE_MODE')
 STRIPE_LIVE_PUBLIC_KEY = env('STRIPE_LIVE_PUBLIC_KEY')
 STRIPE_LIVE_SECRET_KEY = env('STRIPE_LIVE_SECRET_KEY')
 STRIPE_TEST_PUBLIC_KEY = env('STRIPE_TEST_PUBLIC_KEY')
 STRIPE_TEST_SECRET_KEY = env('STRIPE_TEST_SECRET_KEY')
 DJSTRIPE_WEBHOOK_SECRET = env('DJSTRIPE_WEBHOOK_SECRET')
+STRIPE_LIVE_MODE = env('STRIPE_LIVE_MODE')
 DJSTRIPE_SUBSCRIBER_MODEL = 'users.CustomUser'
+
+if STRIPE_LIVE_MODE == True:
+    STRIPE_PUBLIC_KEY = STRIPE_LIVE_PUBLIC_KEY
+    STRIPE_SECRET_KEY = STRIPE_LIVE_SECRET_KEY
+else:
+    STRIPE_PUBLIC_KEY = STRIPE_TEST_PUBLIC_KEY
+    STRIPE_SECRET_KEY = STRIPE_TEST_SECRET_KEY
+
+
+# Project Details
+user_agent = 'Basecamp Poll (me@rasulkireev.com)'

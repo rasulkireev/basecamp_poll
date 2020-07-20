@@ -28,8 +28,8 @@ class UpgradeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
-        context['products'] = Product.objects.all()
+        context['STRIPE_PUBLIC_KEY'] = settings.STRIPE_PUBLIC_KEY
+        context['products'] = Product.objects.filter(livemode=settings.STRIPE_LIVE_MODE)
 
         return context
 
@@ -47,7 +47,7 @@ def create_customer_and_subscription(request):
         'plan_id': 'plan_GqvXkzAvxlF0wR',
     }
     """
-    stripe.api_key = djstripe.settings.STRIPE_PUBLIC_KEY
+    stripe.api_key = djstripe.settings.STRIPE_SECRET_KEY
 
     # parse request, extract details, and verify assumptions
     request_body = json.loads(request.body.decode('utf-8'))

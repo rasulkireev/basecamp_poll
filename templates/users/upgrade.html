@@ -12,18 +12,28 @@
 <h2 class="text-3xl mb-5">Upgrade</h2>
 
 <h3>Select the Plan:</h3>
+
+<div class="flex flex-row">
 {% for product in products %}
   <div class="p-3 m-3">
     <p>{{ product.name }}</p>
+
     {% for plan in product.plan_set.all %}
-      <div>
-        <p>{{ plan.nickname }}</p>
-        <p>{{ plan.human_readable_price }}</p>
-        <p>{{ plan.id }}</p>
+      <div class="border p-2 my-2">
+        <input 
+        type="checkbox" 
+        name="{{ product.name }}" 
+        value="{{product.id}}" 
+        id="{{plan.id}}"
+        onclick="planSelect('{{product.name}}' ,'{{plan.human_readable_price}}', '{{plan.id}}')">
+        <label for="{{plan.id}}">{{ plan.human_readable_price }}</label>
+        <p>ID: {{ plan.id }}</p>
+        <p>Test:{{ plan.livemode }}</p>
       </div>
     {% endfor %}
   </div>
 {% endfor %}
+</div>
 
 <div class="w-2/5">
   <form id="subscription-form">

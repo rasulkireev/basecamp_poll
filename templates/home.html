@@ -8,6 +8,15 @@
   <div class="mb-10">
     <p>Hi {{ user.username }}!</p>
   </div>
+
+  <div class="my-10 p-10">
+    <p class="text-lg font-semibold">
+      Create new poll 
+      <a class="p-3 bg-yellow-300 text-blue-700 hover:text-yellow-300 hover:bg-blue-700" href="{% url 'polls:create-poll' %}">
+        +
+      </a>
+    </p>
+  </div>
   
   {% if user.subscription == None %}
     <div class="mb-10">

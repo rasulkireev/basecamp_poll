@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}New Poll{% endblock %}
+
+{% block content %}
+<h1 class="text-4xl font-semibold">New Poll</h2>
+
+<h2 class="text-2xl">Select Project</h2>
+{% for project in basecamp_projects %}
+<div class="p-3 my-3 border">
+    <input type="checkbox" id="{{ project }}" name="{{ project }}">
+    <label for="{{ project }}">{{ project }}</label>
+</div>
+{% endfor %}
+
+<h2 class="text-2xl">Create Poll</h2>
+{{ form }}
+
+{% endblock %}
